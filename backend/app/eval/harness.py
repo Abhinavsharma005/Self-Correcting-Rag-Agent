@@ -3,7 +3,7 @@ import time
 from typing import List, Dict, Any
 from langchain_core.documents import Document
 
-from backend.app.rag.baseline import get_gemini_client, get_embeddings, call_gemini_with_retry
+from backend.app.rag.baseline import call_ollama, get_embeddings
 from backend.app.rag.chunking import ChunkingManager
 from backend.app.rag.reranker import RerankerManager
 from backend.app.rag.graph import run_self_correcting_rag
@@ -47,15 +47,37 @@ Return strictly JSON array of objects with fields:
 "keywords": list of strings
 """
         try:
-            res = call_gemini_with_retry(
-                model="gemini-3.6-flash",
-                contents=prompt,
-                config={"response_mime_type": "application/json"}
-            )
-            dataset = json.loads(res.text)
+            res_text = call_ollama(prompt=prompt, json_format=True)
+            raw_data = json.loads(res_text)
+            dataset = None
+            if isinstance(raw_data, list):
+                dataset = raw_data
+            elif isinstance(raw_data, dict):
+                for val in raw_data.values():
+                    if isinstance(val, list) and len(val) > 0:
+                        dataset = val
+                        break
+            
+            cleaned = []
+            if isinstance(dataset, list):
+                for idx, item in enumerate(dataset):
+                    if isinstance(item, dict) and "question" in item:
+                        cleaned.append(item)
+                    elif isinstance(item, str) and item.strip():
+                        cleaned.append({
+                            "id": idx + 1,
+                            "question": item.strip(),
+                            "question_type": "Factual",
+                            "expected_answer": item.strip(),
+                            "expected_page": 1,
+                            "keywords": [w for w in item.strip().split() if len(w) > 3][:3]
+                        })
+            if not cleaned:
+                raise ValueError("No valid QA dicts in output")
+            return cleaned
         except Exception:
             # Fallback deterministic benchmark dataset if generation fails
-            dataset = [
+            return [
                 {
                     "id": 1,
                     "question": "What is the primary subject or overview presented in this document?",
@@ -97,7 +119,6 @@ Return strictly JSON array of objects with fields:
                     "keywords": ["evaluation", "procedure", "benchmark"]
                 }
             ]
-        return dataset
 
     @classmethod
     def evaluate_chunking_strategies(

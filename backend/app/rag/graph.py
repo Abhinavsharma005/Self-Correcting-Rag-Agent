@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 from langgraph.graph import StateGraph, END
 from google.genai import types
 
-from backend.app.rag.baseline import get_gemini_client, call_gemini_with_retry
+from backend.app.rag.baseline import call_ollama
 from backend.app.rag.reranker import RerankerManager
 
 class GraphState(TypedDict):
@@ -102,12 +102,8 @@ Respond strictly in JSON format with two keys:
 "reasoning": concise explanation
 """
     try:
-        res = call_gemini_with_retry(
-            model="gemini-3.6-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(response_mime_type="application/json")
-        )
-        data = json.loads(res.text)
+        res_text = call_ollama(prompt=prompt, json_format=True)
+        data = json.loads(res_text)
         score = int(data.get("score", 50))
         is_relevant = bool(data.get("is_relevant", score >= 50))
         reasoning = data.get("reasoning", "")
@@ -140,11 +136,7 @@ Original Question: {orig_query}
 Rewritten Query:"""
 
     try:
-        res = call_gemini_with_retry(
-            model="gemini-3.6-flash",
-            contents=prompt
-        )
-        new_query = res.text.strip()
+        new_query = call_ollama(prompt=prompt)
     except Exception:
         new_query = f"{orig_query} overview details information"
         
@@ -216,11 +208,7 @@ Rules:
 5. Keep the answer clear and concise.
 """
     try:
-        res = call_gemini_with_retry(
-            model="gemini-3.6-flash",
-            contents=prompt
-        )
-        answer = res.text.strip()
+        answer = call_ollama(prompt=prompt)
     except Exception as e:
         answer = f"Error generating response: {e}"
         
@@ -267,12 +255,8 @@ Respond strictly in JSON with two keys:
 "reasoning": concise explanation
 """
     try:
-        res = call_gemini_with_retry(
-            model="gemini-3.6-flash",
-            contents=prompt,
-            config=types.GenerateContentConfig(response_mime_type="application/json")
-        )
-        data = json.loads(res.text)
+        res_text = call_ollama(prompt=prompt, json_format=True)
+        data = json.loads(res_text)
         score = int(data.get("score", 90))
         is_grounded = bool(data.get("is_grounded", score >= 70))
         reasoning = data.get("reasoning", "")

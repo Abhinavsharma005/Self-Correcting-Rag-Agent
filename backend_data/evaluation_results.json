@@ -1,65 +1,65 @@
 {
-  "timestamp": "2026-09-02 10:47:55",
-  "num_test_cases": 5,
+  "timestamp": "2026-09-02 17:00:24",
+  "num_test_cases": 3,
   "chunking_evaluation": {
     "strategy_metrics": {
       "fixed": {
-        "recall_at_4": 20.0,
-        "mrr": 20.0,
-        "precision_at_4": 5.0,
-        "groundedness": 36.0,
-        "accuracy": 20.0,
-        "avg_latency_ms": 40.2
+        "recall_at_4": 100.0,
+        "mrr": 100.0,
+        "precision_at_4": 25.0,
+        "groundedness": 100.0,
+        "accuracy": 100.0,
+        "avg_latency_ms": 182.1
       },
       "recursive": {
-        "recall_at_4": 20.0,
-        "mrr": 20.0,
-        "precision_at_4": 5.0,
-        "groundedness": 36.0,
-        "accuracy": 20.0,
-        "avg_latency_ms": 33.5
+        "recall_at_4": 100.0,
+        "mrr": 100.0,
+        "precision_at_4": 25.0,
+        "groundedness": 100.0,
+        "accuracy": 100.0,
+        "avg_latency_ms": 133.5
       },
       "sentence": {
-        "recall_at_4": 20.0,
-        "mrr": 20.0,
-        "precision_at_4": 5.0,
-        "groundedness": 36.0,
-        "accuracy": 20.0,
-        "avg_latency_ms": 49.3
+        "recall_at_4": 100.0,
+        "mrr": 100.0,
+        "precision_at_4": 25.0,
+        "groundedness": 100.0,
+        "accuracy": 100.0,
+        "avg_latency_ms": 88.5
       },
       "semantic": {
-        "recall_at_4": 20.0,
-        "mrr": 20.0,
-        "precision_at_4": 5.0,
-        "groundedness": 36.0,
-        "accuracy": 20.0,
-        "avg_latency_ms": 62.2
+        "recall_at_4": 100.0,
+        "mrr": 100.0,
+        "precision_at_4": 25.0,
+        "groundedness": 100.0,
+        "accuracy": 100.0,
+        "avg_latency_ms": 89.3
       },
       "parent_child": {
-        "recall_at_4": 20.0,
-        "mrr": 20.0,
-        "precision_at_4": 5.0,
-        "groundedness": 36.0,
-        "accuracy": 20.0,
-        "avg_latency_ms": 64.6
+        "recall_at_4": 100.0,
+        "mrr": 83.3,
+        "precision_at_4": 25.0,
+        "groundedness": 100.0,
+        "accuracy": 93.3,
+        "avg_latency_ms": 90.8
       }
     },
     "best_chunking_strategy": "fixed",
-    "best_chunking_accuracy": 20.0
+    "best_chunking_accuracy": 100.0
   },
   "reranker_evaluation": {
     "reranker_comparison": {
       "retrieval_only": {
-        "recall": 20.0,
-        "mrr": 20.0,
-        "avg_latency_ms": 59.4,
-        "accuracy": 20.0
+        "recall": 100.0,
+        "mrr": 100.0,
+        "avg_latency_ms": 84.1,
+        "accuracy": 100.0
       },
       "with_reranker": {
-        "recall": 20.0,
-        "mrr": 20.0,
-        "avg_latency_ms": 736.6,
-        "accuracy": 20.0
+        "recall": 100.0,
+        "mrr": 100.0,
+        "avg_latency_ms": 5820.2,
+        "accuracy": 100.0
       }
     },
     "best_reranker_config": "Cross-Encoder (ms-marco-MiniLM-L-6-v2)",
@@ -68,22 +68,22 @@
   "system_evaluation": {
     "system_comparison": {
       "baseline_rag": {
-        "accuracy": 76.0,
+        "accuracy": 52.7,
         "hallucination_rate": 20.0,
-        "avg_latency_sec": 10.43
+        "avg_latency_sec": 6.22
       },
       "reranked_rag": {
-        "accuracy": 84.0,
+        "accuracy": 60.7,
         "hallucination_rate": 10.0,
-        "avg_latency_sec": 15.65
+        "avg_latency_sec": 9.33
       },
       "self_correcting_rag": {
-        "accuracy": 90.0,
-        "hallucination_rate": 20.0,
-        "avg_latency_sec": 26.08
+        "accuracy": 66.7,
+        "hallucination_rate": 0.0,
+        "avg_latency_sec": 15.55
       }
     },
     "self_correction_triggered_pct": 0.0,
-    "best_system_accuracy": 90.0
+    "best_system_accuracy": 66.7
   }
 }

@@ -21,8 +21,8 @@ export const Header: React.FC<HeaderProps> = ({ onClearChat, hasMessages, active
             <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent tracking-tight">
               Self-Correcting RAG Agent
             </h1>
-            <span className="px-2 py-0.5 text-[10px] font-semibold bg-cyan-950/80 text-cyan-400 border border-cyan-500/30 rounded-full flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Gemini 3.6 Flash
+            <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 rounded-full flex items-center gap-1">
+              <Sparkles className="w-3 h-3" /> Ollama llama3.2 (Local & Free)
             </span>
           </div>
           <p className="text-xs text-gray-400 flex items-center gap-2 mt-0.5">
