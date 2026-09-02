@@ -258,22 +258,29 @@ Respond strictly in JSON with two keys:
         res_text = call_ollama(prompt=prompt, json_format=True)
         data = json.loads(res_text)
         score = int(data.get("score", 90))
-        is_grounded = bool(data.get("is_grounded", score >= 70))
         reasoning = data.get("reasoning", "")
     except Exception:
         score = 90
-        is_grounded = True
         reasoning = "Groundedness validation default"
         
     elapsed = round(time.time() - t0, 4)
+    # Self-correction threshold: score >= 80 is considered grounded
+    is_grounded = score >= 80
     state["answer_grade"] = {"score": score, "is_grounded": is_grounded, "reasoning": reasoning}
     state["latency_breakdown"]["answer_grading"] = state["latency_breakdown"].get("answer_grading", 0) + elapsed
     
+    retry_count = state.get("retry_count", 0)
+    max_retries = state.get("max_retries", 2)
+    
+    details_str = f"Groundedness Score: {score}% ({'Grounded' if is_grounded else 'Low Groundedness'})"
+    if not is_grounded and retry_count < max_retries:
+        details_str += f" -> Triggering Self-Correction (Attempt {retry_count + 1}/{max_retries})"
+
     state["trace_steps"].append({
         "step": "Grade Answer",
         "status": "COMPLETED" if is_grounded else "FAILED",
         "latency_sec": elapsed,
-        "details": f"Groundedness Score: {score}% ({'Grounded' if is_grounded else 'Hallucination Risk'})"
+        "details": details_str
     })
     return state
 
@@ -284,6 +291,15 @@ def decide_context_route(state: GraphState) -> str:
     
     if is_relevant or retry_count >= max_retries:
         return "generate"
+    return "rewrite_query"
+
+def decide_answer_route(state: GraphState) -> str:
+    is_grounded = state.get("answer_grade", {}).get("is_grounded", True)
+    retry_count = state.get("retry_count", 0)
+    max_retries = state.get("max_retries", 2)
+    
+    if is_grounded or retry_count >= max_retries:
+        return "end"
     return "rewrite_query"
 
 def build_self_correction_graph():
@@ -311,7 +327,15 @@ def build_self_correction_graph():
     
     builder.add_edge("rewrite_query", "retrieve")
     builder.add_edge("generate", "grade_answer")
-    builder.add_edge("grade_answer", END)
+    
+    builder.add_conditional_edges(
+        "grade_answer",
+        decide_answer_route,
+        {
+            "end": END,
+            "rewrite_query": "rewrite_query"
+        }
+    )
     
     return builder.compile()
 
