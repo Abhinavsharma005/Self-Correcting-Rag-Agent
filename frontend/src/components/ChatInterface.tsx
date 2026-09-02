@@ -288,30 +288,36 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       </div>
 
       {/* Sticky input */}
-      <div className="shrink-0 px-5 py-4 border-t border-[#e5ddd4] bg-white">
-        <form onSubmit={handleSubmit}>
-          <div className="relative">
-            <input
-              type="text"
-              value={inputQuery}
-              onChange={(e) => setInputQuery(e.target.value)}
-              placeholder={docId ? "Ask about the document…" : "Upload a PDF document to start chatting…"}
-              disabled={!docId || isLoading}
-              className="chat-input"
-            />
-            <button
-              type="submit"
-              disabled={!docId || !inputQuery.trim() || isLoading}
-              className="send-btn"
-            >
-              <Send className="w-3.5 h-3.5" />
-            </button>
-          </div>
-          <p className="text-[10px] text-[#a8a29e] mt-1.5 font-mono">
-            GROUNDED ANSWERS · CITATIONS ON
-          </p>
-        </form>
+      <div className="shrink-0 px-6 py-3 bg-[#FBF8F1] border-t border-[#e5ddd4]">
+  <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+    <div className="relative rounded-2xl p-2.5 px-3.5 bg-gradient-to-r from-[#F0F5F8] via-[#AACFDA] to-[#E9EFF2] border border-[#d2dfdf] shadow-sm">
+      {/* Text Input Area */}
+      <input
+        type="text"
+        value={inputQuery}
+        onChange={(e) => setInputQuery(e.target.value)}
+        placeholder={docId ? "Ask about the document…" : "Upload a PDF document to start chatting…"}
+        disabled={!docId || isLoading}
+        className="w-full bg-transparent text-sm text-slate-700 placeholder:text-slate-500/80 focus:outline-none disabled:cursor-not-allowed pb-5 border-b border-white/40"
+      />
+
+      {/* Bottom Footer Section */}
+      <div className="flex items-center justify-between pt-3">
+        <p className="text-[10px] text-slate-500 font-mono tracking-widest select-none">
+          GROUNDED ANSWERS · CITATIONS ON
+        </p>
+
+        <button
+          type="submit"
+          disabled={!docId || !inputQuery.trim() || isLoading}
+          className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#0E1E2B] text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+        >
+          <Send className="w-4 h-4" />
+        </button>
       </div>
+    </div>
+  </form>
+</div>
     </div>
   );
 };
