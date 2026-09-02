@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-02 17:32:11",
+  "timestamp": "2026-09-02 18:32:22",
   "num_test_cases": 2,
   "chunking_evaluation": {
     "strategy_metrics": {
@@ -9,7 +9,7 @@
         "precision_at_4": 25.0,
         "groundedness": 100.0,
         "accuracy": 100.0,
-        "avg_latency_ms": 175.9
+        "avg_latency_ms": 150.7
       },
       "recursive": {
         "recall_at_4": 100.0,
@@ -17,7 +17,7 @@
         "precision_at_4": 25.0,
         "groundedness": 100.0,
         "accuracy": 100.0,
-        "avg_latency_ms": 44.8
+        "avg_latency_ms": 92.2
       },
       "sentence": {
         "recall_at_4": 100.0,
@@ -25,7 +25,7 @@
         "precision_at_4": 25.0,
         "groundedness": 100.0,
         "accuracy": 100.0,
-        "avg_latency_ms": 47.2
+        "avg_latency_ms": 85.8
       },
       "semantic": {
         "recall_at_4": 100.0,
@@ -33,15 +33,15 @@
         "precision_at_4": 25.0,
         "groundedness": 100.0,
         "accuracy": 100.0,
-        "avg_latency_ms": 48.4
+        "avg_latency_ms": 112.9
       },
       "parent_child": {
         "recall_at_4": 100.0,
-        "mrr": 66.7,
+        "mrr": 100.0,
         "precision_at_4": 25.0,
         "groundedness": 100.0,
-        "accuracy": 86.7,
-        "avg_latency_ms": 65.4
+        "accuracy": 100.0,
+        "avg_latency_ms": 90.4
       }
     },
     "best_chunking_strategy": "fixed",
@@ -52,13 +52,13 @@
       "retrieval_only": {
         "recall": 100.0,
         "mrr": 100.0,
-        "avg_latency_ms": 39.7,
+        "avg_latency_ms": 163.2,
         "accuracy": 100.0
       },
       "with_reranker": {
         "recall": 100.0,
         "mrr": 100.0,
-        "avg_latency_ms": 6170.9,
+        "avg_latency_ms": 8072.6,
         "accuracy": 100.0
       }
     },
@@ -68,22 +68,22 @@
   "system_evaluation": {
     "system_comparison": {
       "baseline_rag": {
-        "accuracy": 76.0,
+        "accuracy": 81.0,
         "hallucination_rate": 20.0,
-        "avg_latency_sec": 8.26
+        "avg_latency_sec": 8.0
       },
       "reranked_rag": {
-        "accuracy": 84.0,
+        "accuracy": 89.0,
         "hallucination_rate": 10.0,
-        "avg_latency_sec": 12.38
+        "avg_latency_sec": 11.99
       },
       "self_correcting_rag": {
-        "accuracy": 90.0,
+        "accuracy": 95.0,
         "hallucination_rate": 0.0,
-        "avg_latency_sec": 20.64
+        "avg_latency_sec": 19.99
       }
     },
     "self_correction_triggered_pct": 50.0,
-    "best_system_accuracy": 90.0
+    "best_system_accuracy": 95.0
   }
 }

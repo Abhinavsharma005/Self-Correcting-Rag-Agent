@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Cpu, Trash2, ShieldCheck, Sparkles } from "lucide-react";
+import { Brain, Trash2, FileCheck } from "lucide-react";
 
 interface HeaderProps {
   onClearChat: () => void;
@@ -11,39 +11,43 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onClearChat, hasMessages, activeDocName }) => {
   return (
-    <header className="w-full glass-panel border-b border-cyan-500/20 px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+    <header className="w-full bg-white border-b border-[#e5ddd4] px-5 py-3 flex items-center justify-between sticky top-0 z-50 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 rounded-xl bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/40 text-cyan-400 glow-cyan">
-          <Cpu className="w-6 h-6 animate-pulse" />
+        <div className="w-8 h-8 rounded-lg bg-[#ea6c2a] flex items-center justify-center text-white">
+          <Brain className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} />
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent tracking-tight">
+            <h1 className="text-[15px] font-semibold text-[#1c1917] tracking-tight">
               Self-Correcting RAG Agent
             </h1>
-            <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 rounded-full flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Ollama llama3.2 (Local & Free)
+            <span className="badge badge-accent text-[10px]">
+              Ollama llama3.2 · Local &amp; Free
             </span>
           </div>
-          <p className="text-xs text-gray-400 flex items-center gap-2 mt-0.5">
-            <span>LangGraph Agent</span> • <span>Cross-Encoder Reranking</span> • <span>Multi-Chunking Eval</span>
+          <p className="text-[11px] text-[#a8a29e] mt-0 flex items-center gap-1.5">
+            <span>LangGraph</span>
+            <span className="opacity-40">·</span>
+            <span>Cross-Encoder Reranking</span>
+            <span className="opacity-40">·</span>
+            <span>Multi-Chunking Eval</span>
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {activeDocName && (
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900/80 border border-emerald-500/30 text-emerald-400 text-xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span className="font-mono truncate max-w-[180px]">{activeDocName}</span>
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#f0fdf4] border border-[#bbf7d0] text-[#16a34a] text-[11px] font-medium">
+            <FileCheck className="w-3.5 h-3.5" />
+            <span className="truncate max-w-[160px] font-mono">{activeDocName}</span>
           </div>
         )}
 
         {hasMessages && (
           <button
             onClick={onClearChat}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs transition-colors duration-200"
-            title="Clear Chat Conversation"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#fef2f2] border border-[#e5ddd4] hover:border-[#fecaca] text-[#78716c] hover:text-[#dc2626] text-[11px] font-medium transition-all duration-150"
+            title="Clear Conversation"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>Clear Chat</span>

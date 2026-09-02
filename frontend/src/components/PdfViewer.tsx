@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, ChevronLeft, ChevronRight, Bookmark } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { getPdfUrl } from "@/lib/api";
 
 interface PdfViewerProps {
@@ -27,10 +27,16 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   if (!docId) {
     return (
-      <div className="w-full glass-panel rounded-2xl p-6 border border-gray-800 flex flex-col items-center justify-center min-h-[260px] text-center text-gray-500">
-        <Eye className="w-8 h-8 mb-2 opacity-40 text-cyan-400" />
-        <p className="text-xs font-semibold text-gray-400">PDF Preview Unavailable</p>
-        <p className="text-[11px] text-gray-500 mt-1">Upload a PDF document above to activate live preview</p>
+      <div className="w-full">
+        <div className="flex items-center justify-between mb-2">
+          <p className="section-label">Preview</p>
+          <span className="text-[10px] text-[#a8a29e] font-mono">Page — / —</span>
+        </div>
+        <div className="surface-card flex flex-col items-center justify-center min-h-[200px] text-center text-[#a8a29e]">
+          <FileText className="w-8 h-8 mb-2 opacity-30" />
+          <p className="text-[12px] text-[#78716c]">native PDF preview</p>
+          <p className="text-[11px] text-[#a8a29e] mt-0.5">awaiting index</p>
+        </div>
       </div>
     );
   }
@@ -38,40 +44,34 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   const pdfUrl = getPdfUrl(docId);
 
   return (
-    <div className="w-full glass-panel rounded-2xl p-4 border border-cyan-500/20 flex flex-col h-[380px]">
-      <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-gray-800">
-        <div className="flex items-center gap-2">
-          <Bookmark className="w-4 h-4 text-cyan-400" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400">
-            PDF Document Preview
-          </h3>
-        </div>
-
-        <div className="flex items-center gap-2 bg-gray-900/90 px-2.5 py-1 rounded-lg border border-gray-700/60 text-xs text-gray-300 font-mono">
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-2">
+        <p className="section-label">Preview</p>
+        <div className="flex items-center gap-1.5 text-[11px] text-[#57534e] font-mono">
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage <= 1}
-            className="hover:text-cyan-400 disabled:opacity-30"
+            className="p-0.5 hover:text-[#ea6c2a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
           <span>
-            Page <strong className="text-cyan-400">{currentPage}</strong> of {numPages}
+            Page <strong className="text-[#1c1917]">{currentPage}</strong> / {numPages}
           </span>
           <button
             onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
             disabled={currentPage >= numPages}
-            className="hover:text-cyan-400 disabled:opacity-30"
+            className="p-0.5 hover:text-[#ea6c2a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      <div className="relative flex-1 w-full rounded-xl overflow-hidden bg-gray-950 border border-gray-850">
-        {selectedPage && (
-          <div className="absolute top-2 right-2 z-10 px-2.5 py-1 rounded-md bg-cyan-500/90 text-gray-950 font-bold text-[11px] shadow-lg animate-bounce">
-            Highlighted Page {selectedPage}
+      <div className="surface-card overflow-hidden relative" style={{ height: 280 }}>
+        {selectedPage && selectedPage !== currentPage && (
+          <div className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded bg-[#ea6c2a] text-white text-[10px] font-semibold shadow">
+            ↗ Page {selectedPage} cited
           </div>
         )}
         <iframe
