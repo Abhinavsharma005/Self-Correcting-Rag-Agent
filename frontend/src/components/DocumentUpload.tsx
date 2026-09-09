@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { UploadCloud, Loader2, AlertCircle, RefreshCw, CheckCircle2 } from "lucide-react";
+import { UploadCloud, Loader2, AlertCircle, FileText } from "lucide-react";
 import { UploadResponse } from "@/lib/api";
 
 interface DocumentUploadProps {
@@ -29,7 +29,6 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
       return;
     }
     setError(null);
-    // Immediately clear previous document state in parent UI
     if (onUploadStart) {
       onUploadStart();
     }
@@ -56,9 +55,20 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
 
   return (
     <div className="w-full">
-      <p className="section-label mb-2">Source Document</p>
+      <div className="flex items-center justify-between mb-2">
+        <p className="section-label">Current Document</p>
+        {uploadedDocInfo && !isUploading && (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="text-[11px] px-2.5 py-0.5 rounded-md border border-[#e2e8f0] bg-white text-[#475569] hover:bg-[#f8fafc] hover:border-[var(--primary-border)] font-medium transition-colors"
+          >
+            Change
+          </button>
+        )}
+      </div>
 
-      {/* Hidden file input — always present */}
+      {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
@@ -71,33 +81,33 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
         }}
       />
 
-      {/* Upload zone or Uploaded doc card: when uploading, always show ingestion state */}
+      {/* Upload zone or Document Card */}
       {!uploadedDocInfo || isUploading ? (
         <div
           onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
           onDragLeave={() => setDragActive(false)}
           onDrop={handleDrop}
           onClick={() => !isUploading && fileInputRef.current?.click()}
-          className={`upload-zone p-5 text-center ${dragActive ? "active" : ""}`}
+          className={`upload-zone p-4 text-center ${dragActive ? "active" : ""}`}
         >
           {isUploading ? (
             <div className="flex flex-col items-center justify-center gap-2 py-1">
-              <Loader2 className="w-6 h-6 text-[#ea6c2a] animate-spin" />
-              <p className="text-[13px] font-medium text-[#1c1917]">Ingesting PDF…</p>
-              <p className="text-[11px] text-[#a8a29e]">Chunking (5 strategies) + embedding vectors</p>
+              <Loader2 className="w-6 h-6 text-[var(--primary)] animate-spin" />
+              <p className="text-[13px] font-medium text-[#0f172a]">Ingesting PDF…</p>
+              <p className="text-[11px] text-[#94a3b8]">Chunking (5 strategies) + embedding vectors</p>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center gap-2 py-1">
-              <div className="w-10 h-10 rounded-xl bg-[#fdf0e8] flex items-center justify-center text-[#ea6c2a]">
+              <div className="w-9 h-9 rounded-xl bg-[var(--primary-soft)] flex items-center justify-center text-[var(--primary)]">
                 <UploadCloud className="w-5 h-5" />
               </div>
-              <p className="text-[13px] font-medium text-[#1c1917]">
+              <p className="text-[13px] font-medium text-[#0f172a]">
                 Drop a document here
               </p>
-              <p className="text-[11px] text-[#a8a29e]">PDF, DOCX, Markdown</p>
+              <p className="text-[11px] text-[#94a3b8]">PDF files supported</p>
               <button
                 type="button"
-                className="mt-1 px-4 py-1.5 bg-white border border-[#e5ddd4] rounded-lg text-[12px] font-medium text-[#57534e] hover:border-[#ea6c2a] hover:text-[#ea6c2a] transition-all"
+                className="mt-0.5 px-3.5 py-1 bg-white border border-[#e2e8f0] rounded-lg text-[11px] font-medium text-[#475569] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all shadow-2xs"
                 onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
               >
                 Browse file
@@ -106,39 +116,33 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
           )}
         </div>
       ) : (
-        <div className="surface-card p-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-9 h-9 rounded-lg bg-[#fdf0e8] flex items-center justify-center text-[#ea6c2a] shrink-0 text-xs font-bold">
-              PDF
+        /* Target style Current Document Card */
+        <div className="surface-card p-3 rounded-xl">
+          <div className="flex items-center gap-3">
+            {/* Red PDF icon badge */}
+            <div className="w-9 h-9 rounded-lg bg-[#ef4444] text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <FileText className="w-5 h-5" />
             </div>
-            <div className="overflow-hidden">
-              <p className="text-[13px] font-semibold text-[#1c1917] truncate">{uploadedDocInfo.filename}</p>
-              <div className="flex items-center gap-2 text-[11px] text-[#a8a29e] mt-0.5 font-mono">
-                <span>application/pdf</span>
-                <span className="opacity-40">·</span>
-                <span>{uploadedDocInfo.file_size_mb} MB</span>
-                <span className="opacity-40">·</span>
-                <span className="text-[#ea6c2a] font-semibold">{uploadedDocInfo.num_pages} pages</span>
-              </div>
-              <div className="flex items-center gap-1 mt-1">
-                <CheckCircle2 className="w-3 h-3 text-[#16a34a]" />
-                <span className="text-[10px] text-[#16a34a] font-medium">Indexed & ready for RAG</span>
-              </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-semibold text-[#0f172a] truncate leading-tight">
+                {uploadedDocInfo.filename}
+              </p>
+              <p className="text-[11px] text-[#94a3b8] font-mono mt-0.5">
+                {uploadedDocInfo.num_pages} pages · {uploadedDocInfo.file_size_mb} MB
+              </p>
             </div>
           </div>
 
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="shrink-0 p-1.5 rounded-lg hover:bg-[#f1ede7] text-[#a8a29e] hover:text-[#57534e] transition-colors"
-            title="Replace document"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
+          {/* Green progress/status bar */}
+          <div className="w-full bg-[#f1f5f9] h-1 rounded-full overflow-hidden mt-3">
+            <div className="bg-[var(--primary)] h-full w-full rounded-full transition-all duration-300" />
+          </div>
         </div>
       )}
 
       {error && (
-        <div className="mt-2 p-2.5 rounded-lg bg-[#fef2f2] border border-[#fecaca] text-[#dc2626] text-[11px] flex items-center gap-2">
+        <div className="mt-2 p-2 rounded-lg bg-[#fef2f2] border border-[#fecaca] text-[#ef4444] text-[11px] flex items-center gap-2">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{error}</span>
         </div>

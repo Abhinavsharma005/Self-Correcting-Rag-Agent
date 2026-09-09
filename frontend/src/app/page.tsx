@@ -3,7 +3,6 @@
 import React, { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { DocumentUpload } from "@/components/DocumentUpload";
-import { PdfViewer } from "@/components/PdfViewer";
 import { RagStats } from "@/components/RagStats";
 import { WorkflowGraph } from "@/components/WorkflowGraph";
 import { ChatInterface, Message } from "@/components/ChatInterface";
@@ -203,7 +202,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f6f2] flex flex-col">
+    <div className="min-h-screen bg-[#F7FAFD] flex flex-col">
       <Header
         onClearChat={handleClearChat}
         hasMessages={messages.length > 0}
@@ -211,21 +210,14 @@ export default function Home() {
       />
 
       <main className="flex-1 flex overflow-hidden" style={{ height: "calc(100vh - 56px)" }}>
-        {/* LEFT SIDEBAR */}
-        <aside className="w-[340px] shrink-0 border-r border-[#e5ddd4] bg-white overflow-y-auto p-4 flex flex-col gap-5 hidden lg:flex">
+        {/* LEFT SIDEBAR — pure white with subtle border, no PDF preview */}
+        <aside className="w-[320px] lg:w-[330px] shrink-0 border-r border-[#e2e8f0] bg-white overflow-y-auto p-4 flex flex-col gap-4 hidden lg:flex">
           <DocumentUpload
             onUploadSuccess={handleUploadSuccess}
             onUploadStart={handleUploadStart}
             isUploading={isUploading}
             setIsUploading={setIsUploading}
             uploadedDocInfo={uploadData}
-          />
-
-          <PdfViewer
-            docId={uploadData?.doc_id}
-            numPages={uploadData?.num_pages}
-            filename={uploadData?.filename}
-            selectedPage={selectedCitationPage}
           />
 
           {/* LangGraph Trace: visible whenever a document is active.
@@ -245,7 +237,7 @@ export default function Home() {
 
         {/* MOBILE: Upload row above chat */}
         <div className="lg:hidden w-full flex flex-col">
-          <div className="p-4 border-b border-[#e5ddd4] bg-white">
+          <div className="p-4 border-b border-[#e2e8f0] bg-white">
             <DocumentUpload
               onUploadSuccess={handleUploadSuccess}
               onUploadStart={handleUploadStart}

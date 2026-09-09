@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, Loader2, AlertTriangle, Circle } from "lucide-react";
+import { Check, Loader2, ChevronRight } from "lucide-react";
 import { TraceStep } from "@/lib/api";
 
 interface WorkflowGraphProps {
@@ -14,14 +14,20 @@ export const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ traceSteps = [], i
     { name: "Retrieve", key: "Retrieval" },
     { name: "Rerank", key: "Reranking" },
     { name: "Grade Context", key: "Grade Context" },
-    { name: "Query Rewrite", key: "Rewrite Query" },
-    { name: "Generate", key: "Generate" },
-    { name: "Grade Answer", key: "Grade Answer" },
+    { name: "Rewrite Query", key: "Rewrite Query" },
+    { name: "Generate Answer", key: "Generate" },
+    { name: "Self-Correction", key: "Grade Answer" },
   ];
 
   const getStepStatus = (stepKey: string) => {
     const found = traceSteps.find((s) => s.step.toLowerCase() === stepKey.toLowerCase());
-    if (found) return { status: found.status, details: found.details, latency: found.latency_sec };
+    if (found) {
+      return {
+        status: found.status,
+        details: found.details,
+        latency: found.latency_sec,
+      };
+    }
 
     if (isRunning) {
       const completedCount = traceSteps.length;
@@ -33,72 +39,85 @@ export const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ traceSteps = [], i
     return { status: "WAITING", details: "", latency: 0 };
   };
 
-  const hasActivity = traceSteps.length > 0 || isRunning;
+  const totalLatency = traceSteps.reduce((acc, curr) => acc + (curr.latency_sec || 0), 0);
+  const completedStepsCount = traceSteps.filter((s) => s.status === "COMPLETED").length;
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-2">
-        <p className="section-label">LangGraph Trace</p>
-        {isRunning && (
-          <span className="badge badge-accent text-[10px] animate-pulse">Running</span>
-        )}
-        {!isRunning && traceSteps.length > 0 && (
-          <span className="badge badge-success text-[10px]">Completed</span>
-        )}
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2.5">
+        <p className="section-label">RAG Trace</p>
+        <div className="flex items-center gap-1 text-[10px] text-[#64748b] font-mono">
+          {isRunning ? (
+            <span className="badge badge-accent text-[10px] animate-pulse">Running</span>
+          ) : traceSteps.length > 0 ? (
+            <span className="flex items-center gap-0.5 hover:text-[var(--primary)] transition-colors">
+              {defaultSteps.length} steps · {totalLatency > 0 ? `${totalLatency.toFixed(1)}s` : "completed"}
+              <ChevronRight className="w-3 h-3 text-[#94a3b8]" />
+            </span>
+          ) : (
+            <span>Ready</span>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      {/* Timeline List */}
+      <div className="flex flex-col relative pl-1">
         {defaultSteps.map((step, idx) => {
           const { status, details, latency } = getStepStatus(step.key);
-
-          let icon = <Circle className="w-3.5 h-3.5 text-[#d6d3d1]" />;
-
-          if (status === "COMPLETED") {
-            icon = <CheckCircle2 className="w-3.5 h-3.5 text-[#16a34a]" />;
-          } else if (status === "RUNNING") {
-            icon = <Loader2 className="w-3.5 h-3.5 text-[#ea6c2a]" style={{ animation: "spin 1s linear infinite" }} />;
-          } else if (status === "FAILED") {
-            icon = <AlertTriangle className="w-3.5 h-3.5 text-[#d97706]" />;
-          }
-
-          const stepClass =
-            status === "COMPLETED"
-              ? "workflow-step completed"
-              : status === "RUNNING"
-              ? "workflow-step running"
-              : status === "FAILED"
-              ? "workflow-step failed"
-              : "workflow-step waiting";
+          const isLast = idx === defaultSteps.length - 1;
+          const isCompleted = status === "COMPLETED";
+          const isCurrentRunning = status === "RUNNING";
 
           return (
-            <div key={step.key} className={stepClass}>
-              {/* Left: index + icon + name + detail */}
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <span className="text-[10px] font-mono text-[#d6d3d1] w-3 shrink-0">{idx + 1}</span>
-                <span className="shrink-0">{icon}</span>
-                <div className="min-w-0">
-                  <p className="text-[12px] font-semibold text-[#1c1917] leading-tight">{step.name}</p>
-                  {details && status !== "WAITING" && (
-                    <p className="text-[10px] text-[#78716c] font-mono truncate max-w-[155px]">{details}</p>
-                  )}
-                </div>
+            <div key={step.key} className="flex items-start gap-2.5 relative pb-3 group">
+              {/* Connected vertical line */}
+              {!isLast && (
+                <div
+                  className={`absolute left-[9px] top-[18px] bottom-0 w-[2px] transition-colors duration-200 ${
+                    isCompleted ? "bg-[var(--primary)]" : "bg-[#e2e8f0]"
+                  }`}
+                />
+              )}
+
+              {/* Step indicator circle */}
+              <div className="relative z-10 shrink-0 mt-0.5">
+                {isCompleted ? (
+                  <div className="w-5 h-5 rounded-full bg-[var(--primary)] text-white flex items-center justify-center shadow-2xs">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                ) : isCurrentRunning ? (
+                  <div className="w-5 h-5 rounded-full border-2 border-[var(--primary)] bg-white flex items-center justify-center">
+                    <Loader2 className="w-3 h-3 text-[var(--primary)] animate-spin" />
+                  </div>
+                ) : (
+                  <div className="w-5 h-5 rounded-full border-2 border-[#cbd5e1] bg-white flex items-center justify-center" />
+                )}
               </div>
 
-              {/* Right: latency only — no redundant status text */}
-              {latency > 0 && (
-                <span className="text-[10px] text-[#a8a29e] font-mono shrink-0 ml-1">
-                  {latency.toFixed(2)}s
+              {/* Step content */}
+              <div className="flex-1 min-w-0 flex items-start justify-between gap-1 leading-tight">
+                <div className="min-w-0 pr-1">
+                  <p className={`text-[12px] font-semibold truncate ${
+                    isCompleted || isCurrentRunning ? "text-[#0f172a]" : "text-[#94a3b8]"
+                  }`}>
+                    {step.name}
+                  </p>
+                  {details && status !== "WAITING" ? (
+                    <p className="text-[10px] text-[#64748b] truncate max-w-[170px] mt-0.5 font-mono">
+                      {details}
+                    </p>
+                  ) : null}
+                </div>
+
+                {/* Latency on right */}
+                <span className="text-[10px] font-mono text-[#64748b] shrink-0 mt-0.5">
+                  {latency > 0 ? `${latency.toFixed(2)}s` : isCompleted ? "—" : ""}
                 </span>
-              )}
+              </div>
             </div>
           );
         })}
-
-        {!hasActivity && (
-          <p className="text-[11px] text-[#a8a29e] text-center py-2">
-            Run a query to see the LangGraph execution trace
-          </p>
-        )}
       </div>
     </div>
   );
