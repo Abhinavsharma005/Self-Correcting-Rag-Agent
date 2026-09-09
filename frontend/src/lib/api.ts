@@ -51,6 +51,8 @@ export interface StatsResponse {
     filename?: string;
     num_pages?: number;
     file_size_mb?: number;
+    total_chunks?: number;
+    chunk_stats?: Record<string, { num_chunks: number; avg_chunk_len: number; indexing_latency_sec: number }>;
   };
   evaluation: any;
 }
@@ -99,6 +101,15 @@ export async function fetchStats(docId?: string): Promise<StatsResponse> {
   const url = docId ? `${API_BASE}/stats/${docId}` : `${API_BASE}/stats`;
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch stats");
+  return res.json();
+}
+
+export async function startNewSession(preserveDocId?: string): Promise<any> {
+  const url = preserveDocId
+    ? `${API_BASE}/session/new?preserve_doc_id=${encodeURIComponent(preserveDocId)}`
+    : `${API_BASE}/session/new`;
+  const res = await fetch(url, { method: "POST" });
+  if (!res.ok) throw new Error("Failed to start new session");
   return res.json();
 }
 

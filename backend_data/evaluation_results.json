@@ -1,89 +1,89 @@
 {
-  "timestamp": "2026-09-02 18:32:22",
-  "num_test_cases": 2,
+  "timestamp": "2026-09-09 20:44:53",
+  "num_test_cases": 4,
   "chunking_evaluation": {
     "strategy_metrics": {
       "fixed": {
-        "recall_at_4": 100.0,
-        "mrr": 100.0,
-        "precision_at_4": 25.0,
-        "groundedness": 100.0,
-        "accuracy": 100.0,
-        "avg_latency_ms": 150.7
+        "recall_at_4": 75.0,
+        "mrr": 62.5,
+        "precision_at_4": 18.8,
+        "groundedness": 80.0,
+        "accuracy": 70.0,
+        "avg_latency_ms": 36.8
       },
       "recursive": {
-        "recall_at_4": 100.0,
-        "mrr": 100.0,
-        "precision_at_4": 25.0,
-        "groundedness": 100.0,
-        "accuracy": 100.0,
-        "avg_latency_ms": 92.2
+        "recall_at_4": 75.0,
+        "mrr": 62.5,
+        "precision_at_4": 18.8,
+        "groundedness": 80.0,
+        "accuracy": 70.0,
+        "avg_latency_ms": 22.8
       },
       "sentence": {
         "recall_at_4": 100.0,
-        "mrr": 100.0,
+        "mrr": 64.6,
         "precision_at_4": 25.0,
         "groundedness": 100.0,
-        "accuracy": 100.0,
-        "avg_latency_ms": 85.8
+        "accuracy": 85.8,
+        "avg_latency_ms": 22.9
       },
       "semantic": {
-        "recall_at_4": 100.0,
-        "mrr": 100.0,
-        "precision_at_4": 25.0,
-        "groundedness": 100.0,
-        "accuracy": 100.0,
-        "avg_latency_ms": 112.9
+        "recall_at_4": 75.0,
+        "mrr": 62.5,
+        "precision_at_4": 18.8,
+        "groundedness": 80.0,
+        "accuracy": 70.0,
+        "avg_latency_ms": 23.0
       },
       "parent_child": {
-        "recall_at_4": 100.0,
-        "mrr": 100.0,
-        "precision_at_4": 25.0,
-        "groundedness": 100.0,
-        "accuracy": 100.0,
-        "avg_latency_ms": 90.4
+        "recall_at_4": 75.0,
+        "mrr": 75.0,
+        "precision_at_4": 18.8,
+        "groundedness": 80.0,
+        "accuracy": 75.0,
+        "avg_latency_ms": 27.4
       }
     },
-    "best_chunking_strategy": "fixed",
-    "best_chunking_accuracy": 100.0
+    "best_chunking_strategy": "sentence",
+    "best_chunking_accuracy": 85.8
   },
   "reranker_evaluation": {
     "reranker_comparison": {
       "retrieval_only": {
         "recall": 100.0,
-        "mrr": 100.0,
-        "avg_latency_ms": 163.2,
-        "accuracy": 100.0
+        "mrr": 64.6,
+        "avg_latency_ms": 21.5,
+        "accuracy": 82.3
       },
       "with_reranker": {
         "recall": 100.0,
         "mrr": 100.0,
-        "avg_latency_ms": 8072.6,
+        "avg_latency_ms": 3448.0,
         "accuracy": 100.0
       }
     },
     "best_reranker_config": "Cross-Encoder (ms-marco-MiniLM-L-6-v2)",
-    "accuracy_boost_pct": 0.0
+    "accuracy_boost_pct": 17.7
   },
   "system_evaluation": {
     "system_comparison": {
       "baseline_rag": {
-        "accuracy": 81.0,
+        "accuracy": 61.0,
         "hallucination_rate": 20.0,
-        "avg_latency_sec": 8.0
+        "avg_latency_sec": 11.56
       },
       "reranked_rag": {
-        "accuracy": 89.0,
+        "accuracy": 69.0,
         "hallucination_rate": 10.0,
-        "avg_latency_sec": 11.99
+        "avg_latency_sec": 17.33
       },
       "self_correcting_rag": {
-        "accuracy": 95.0,
+        "accuracy": 75.0,
         "hallucination_rate": 0.0,
-        "avg_latency_sec": 19.99
+        "avg_latency_sec": 28.89
       }
     },
     "self_correction_triggered_pct": 50.0,
-    "best_system_accuracy": 95.0
+    "best_system_accuracy": 75.0
   }
 }

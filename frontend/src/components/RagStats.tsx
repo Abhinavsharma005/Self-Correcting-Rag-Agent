@@ -10,12 +10,26 @@ interface RagStatsProps {
 }
 
 export const RagStats: React.FC<RagStatsProps> = ({ uploadData, latestQueryStats }) => {
-  const evalData = uploadData?.evaluation;
+  const evalData = uploadData?.evaluation || (uploadData as any);
   const chunkingEval = evalData?.chunking_evaluation;
   const rerankerEval = evalData?.reranker_evaluation;
 
-  const bestStrategy = chunkingEval?.best_chunking_strategy || "—";
-  const bestAccuracy = chunkingEval?.best_chunking_accuracy ?? null;
+  // Active strategy: use the strategy executed in the live query if available;
+  // otherwise use the best evaluated chunking strategy from benchmark.
+  const activeStrategy =
+    latestQueryStats?.chunking_strategy_used ||
+    chunkingEval?.best_chunking_strategy ||
+    "—";
+
+  // Real evaluated accuracy: look up the specific chunking strategy's accuracy
+  // in strategy_metrics, falling back to best_chunking_accuracy, never hardcoding 100%.
+  const normalizedStrategy = activeStrategy !== "—" ? activeStrategy.toLowerCase() : null;
+  const strategyMetric = normalizedStrategy && chunkingEval?.strategy_metrics?.[normalizedStrategy];
+  const displayAccuracy =
+    strategyMetric?.accuracy ??
+    chunkingEval?.best_chunking_accuracy ??
+    null;
+
   const bestReranker = rerankerEval?.best_reranker_config || "—";
   const accuracyBoost = rerankerEval?.accuracy_boost_pct ?? null;
 
@@ -24,7 +38,7 @@ export const RagStats: React.FC<RagStatsProps> = ({ uploadData, latestQueryStats
   const selfCorrectionTriggered = latestQueryStats?.self_correction_triggered ?? null;
   const retryCount = latestQueryStats?.retry_count ?? 0;
 
-  const hasData = uploadData != null;
+  const hasData = uploadData != null || latestQueryStats != null;
 
   return (
     <div className="w-full">
@@ -45,12 +59,12 @@ export const RagStats: React.FC<RagStatsProps> = ({ uploadData, latestQueryStats
           <div className="grid grid-cols-2 gap-2">
             <div className="stat-cell">
               <span className="stat-label">Strategy</span>
-              <span className="stat-value capitalize">{bestStrategy}</span>
+              <span className="stat-value capitalize">{activeStrategy}</span>
             </div>
             <div className="stat-cell">
               <span className="stat-label">Accuracy</span>
               <span className="stat-value accent">
-                {bestAccuracy !== null ? `${bestAccuracy}%` : "—"}
+                {displayAccuracy !== null ? `${displayAccuracy}%` : "—"}
               </span>
             </div>
           </div>
@@ -132,9 +146,9 @@ export const RagStats: React.FC<RagStatsProps> = ({ uploadData, latestQueryStats
             </p>
           )}
 
-          {bestAccuracy !== null && (
+          {chunkingEval?.best_chunking_accuracy != null && (
             <p className="text-[11px] text-[#ea6c2a] font-medium px-1">
-              Best retrieval accuracy: {bestAccuracy}%
+              Best retrieval accuracy: {chunkingEval.best_chunking_accuracy}% ({chunkingEval.best_chunking_strategy || "optimal"})
             </p>
           )}
         </div>

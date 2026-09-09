@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { DocumentUpload } from "@/components/DocumentUpload";
 import { PdfViewer } from "@/components/PdfViewer";
 import { RagStats } from "@/components/RagStats";
 import { WorkflowGraph } from "@/components/WorkflowGraph";
 import { ChatInterface, Message } from "@/components/ChatInterface";
-import { UploadResponse, sendQuery } from "@/lib/api";
+import { UploadResponse, sendQuery, fetchStats, startNewSession } from "@/lib/api";
 
 export default function Home() {
   const [uploadData, setUploadData] = useState<UploadResponse | null>(null);
@@ -16,6 +16,28 @@ export default function Home() {
   const [isLoadingQuery, setIsLoadingQuery] = useState<boolean>(false);
   const [selectedCitationPage, setSelectedCitationPage] = useState<number | null>(null);
   const [latestQueryStats, setLatestQueryStats] = useState<any>(null);
+
+  // Restore active document session & telemetry on mount if active on backend
+  useEffect(() => {
+    fetchStats()
+      .then((stats) => {
+        if (stats.document?.doc_id) {
+          setUploadData({
+            doc_id: stats.document.doc_id,
+            filename: stats.document.filename || "Uploaded Document",
+            file_size_mb: stats.document.file_size_mb || 0,
+            num_pages: stats.document.num_pages || 1,
+            total_chunks: stats.document.total_chunks || 0,
+            chunk_stats: stats.document.chunk_stats || {},
+            evaluation: stats.evaluation || null,
+          });
+          setSelectedCitationPage(1);
+        }
+      })
+      .catch(() => {
+        // Backend not running or no active session
+      });
+  }, []);
 
   const handleUploadSuccess = (data: UploadResponse) => {
     setUploadData(data);
@@ -30,10 +52,17 @@ export default function Home() {
     ]);
   };
 
-  const handleClearChat = () => {
+  const handleClearChat = async () => {
     setMessages([]);
     setSelectedCitationPage(null);
     setLatestQueryStats(null);
+    if (uploadData?.doc_id) {
+      try {
+        await startNewSession(uploadData.doc_id);
+      } catch {
+        // Ignore session cleanup failure
+      }
+    }
   };
 
   const handleSendMessage = async (query: string) => {
@@ -50,10 +79,12 @@ export default function Home() {
     setIsLoadingQuery(true);
 
     try {
+      // Use the evaluated best chunking strategy without hardcoded fallbacks
+      const preferredStrategy = uploadData.evaluation?.chunking_evaluation?.best_chunking_strategy;
       const res = await sendQuery(
         uploadData.doc_id,
         query,
-        uploadData.evaluation?.chunking_evaluation?.best_chunking_strategy || "fixed",
+        preferredStrategy || undefined,
         true
       );
 
