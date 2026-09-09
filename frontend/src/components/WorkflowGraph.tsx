@@ -70,39 +70,26 @@ export const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ traceSteps = [], i
               ? "workflow-step failed"
               : "workflow-step waiting";
 
-          const statusLabel =
-            status === "COMPLETED" ? "COMPLETED" :
-            status === "RUNNING" ? "RUNNING" :
-            status === "FAILED" ? "FAILED" :
-            "—";
-
-          const statusColor =
-            status === "COMPLETED" ? "text-[#16a34a]" :
-            status === "RUNNING" ? "text-[#ea6c2a]" :
-            status === "FAILED" ? "text-[#d97706]" :
-            "text-[#d6d3d1]";
-
           return (
             <div key={step.key} className={stepClass}>
-              <div className="flex items-center gap-2.5">
-                <span className="text-[10px] font-mono text-[#d6d3d1] w-3">{idx + 1}</span>
-                {icon}
-                <div>
-                  <p className="text-[12px] font-semibold text-[#1c1917]">{step.name}</p>
+              {/* Left: index + icon + name + detail */}
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <span className="text-[10px] font-mono text-[#d6d3d1] w-3 shrink-0">{idx + 1}</span>
+                <span className="shrink-0">{icon}</span>
+                <div className="min-w-0">
+                  <p className="text-[12px] font-semibold text-[#1c1917] leading-tight">{step.name}</p>
                   {details && status !== "WAITING" && (
-                    <p className="text-[10px] text-[#78716c] font-mono truncate max-w-[180px]">{details}</p>
+                    <p className="text-[10px] text-[#78716c] font-mono truncate max-w-[155px]">{details}</p>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                {latency > 0 && (
-                  <span className="text-[10px] text-[#a8a29e] font-mono">{latency.toFixed(2)}s</span>
-                )}
-                {status !== "WAITING" && (
-                  <span className={`text-[10px] font-semibold ${statusColor}`}>{statusLabel}</span>
-                )}
-              </div>
+              {/* Right: latency only — no redundant status text */}
+              {latency > 0 && (
+                <span className="text-[10px] text-[#a8a29e] font-mono shrink-0 ml-1">
+                  {latency.toFixed(2)}s
+                </span>
+              )}
             </div>
           );
         })}
