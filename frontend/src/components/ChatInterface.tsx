@@ -156,9 +156,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-col" style={{ height: "calc(100vh - 56px)" }}>
+    <div className="w-full flex flex-col bg-[#f8f6f2]" style={{ height: "calc(100vh - 56px)" }}>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-[#e5ddd4] bg-white shrink-0">
+      <div className="flex items-center justify-between px-6 sm:px-8 py-3 border-b border-[#e5ddd4] bg-white shrink-0">
         <div className="flex items-center gap-2">
           <p className="section-label">Conversation</p>
           <span className="text-[#d6d3d1] text-[10px]">·</span>
@@ -167,7 +167,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       </div>
 
       {/* Messages feed */}
-      <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6 bg-[#f8f6f2]">
+      <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-5 space-y-6 bg-[#f8f6f2]">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center text-[#a8a29e] py-16">
             <div className="w-14 h-14 rounded-2xl bg-white border border-[#e5ddd4] flex items-center justify-center mb-4 shadow-sm">
@@ -287,10 +287,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div ref={chatEndRef} />
       </div>
 
-      {/* Sticky input */}
-      <div className="shrink-0 px-6 py-3 bg-[#FBF8F1] border-t border-[#e5ddd4]">
-  <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-    <div className="relative rounded-2xl p-2.5 px-3.5 bg-gradient-to-r from-[#F0F5F8] via-[#AACFDA] to-[#E9EFF2] border border-[#d2dfdf] shadow-sm">
+      {/* Floating input container */}
+      <div className="shrink-0 px-4 sm:px-8 pb-5 pt-2 bg-transparent">
+        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+          <div className="relative rounded-2xl p-2.5 px-3.5 bg-gradient-to-r from-[#F0F5F8] via-[#AACFDA] to-[#E9EFF2] border border-[#d2dfdf] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_24px_-4px_rgba(0,0,0,0.12)] transition-shadow">
       {/* Text Input Area */}
       <input
         type="text"
