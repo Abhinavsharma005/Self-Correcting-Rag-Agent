@@ -55,14 +55,14 @@ export const RagStats: React.FC<RagStatsProps> = ({ uploadData, latestQueryStats
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          {/* Row 1: Strategy + Accuracy */}
+          {/* Row 1: Strategy + Retrieval Accuracy */}
           <div className="grid grid-cols-2 gap-2">
             <div className="stat-cell">
               <span className="stat-label">Strategy</span>
               <span className="stat-value capitalize">{activeStrategy}</span>
             </div>
             <div className="stat-cell">
-              <span className="stat-label">Accuracy</span>
+              <span className="stat-label">Retrieval Accuracy</span>
               <span className="stat-value accent">
                 {displayAccuracy !== null ? `${displayAccuracy}%` : "—"}
               </span>

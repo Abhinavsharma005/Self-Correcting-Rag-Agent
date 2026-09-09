@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { DocumentUpload } from "@/components/DocumentUpload";
 import { PdfViewer } from "@/components/PdfViewer";
 import { RagStats } from "@/components/RagStats";
 import { WorkflowGraph } from "@/components/WorkflowGraph";
 import { ChatInterface, Message } from "@/components/ChatInterface";
-import { UploadResponse, sendQuery, fetchStats, startNewSession } from "@/lib/api";
+import { UploadResponse, sendQuery, startNewSession } from "@/lib/api";
 
 export default function Home() {
+  // Always start with a clean session on page reload/refresh
   const [uploadData, setUploadData] = useState<UploadResponse | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -17,27 +18,13 @@ export default function Home() {
   const [selectedCitationPage, setSelectedCitationPage] = useState<number | null>(null);
   const [latestQueryStats, setLatestQueryStats] = useState<any>(null);
 
-  // Restore active document session & telemetry on mount if active on backend
-  useEffect(() => {
-    fetchStats()
-      .then((stats) => {
-        if (stats.document?.doc_id) {
-          setUploadData({
-            doc_id: stats.document.doc_id,
-            filename: stats.document.filename || "Uploaded Document",
-            file_size_mb: stats.document.file_size_mb || 0,
-            num_pages: stats.document.num_pages || 1,
-            total_chunks: stats.document.total_chunks || 0,
-            chunk_stats: stats.document.chunk_stats || {},
-            evaluation: stats.evaluation || null,
-          });
-          setSelectedCitationPage(1);
-        }
-      })
-      .catch(() => {
-        // Backend not running or no active session
-      });
-  }, []);
+  // Immediately clear old document, chat, and telemetry when a new upload starts
+  const handleUploadStart = () => {
+    setUploadData(null);
+    setMessages([]);
+    setSelectedCitationPage(null);
+    setLatestQueryStats(null);
+  };
 
   const handleUploadSuccess = (data: UploadResponse) => {
     setUploadData(data);
@@ -128,6 +115,7 @@ export default function Home() {
         <aside className="w-[340px] shrink-0 border-r border-[#e5ddd4] bg-white overflow-y-auto p-4 flex flex-col gap-5 hidden lg:flex">
           <DocumentUpload
             onUploadSuccess={handleUploadSuccess}
+            onUploadStart={handleUploadStart}
             isUploading={isUploading}
             setIsUploading={setIsUploading}
             uploadedDocInfo={uploadData}
@@ -159,6 +147,7 @@ export default function Home() {
           <div className="p-4 border-b border-[#e5ddd4] bg-white">
             <DocumentUpload
               onUploadSuccess={handleUploadSuccess}
+              onUploadStart={handleUploadStart}
               isUploading={isUploading}
               setIsUploading={setIsUploading}
               uploadedDocInfo={uploadData}

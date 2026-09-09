@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { UploadCloud, FileText, CheckCircle2, Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { UploadCloud, Loader2, AlertCircle, RefreshCw, CheckCircle2 } from "lucide-react";
 import { UploadResponse } from "@/lib/api";
 
 interface DocumentUploadProps {
   onUploadSuccess: (data: UploadResponse) => void;
+  onUploadStart?: () => void;
   isUploading: boolean;
   setIsUploading: (val: boolean) => void;
   uploadedDocInfo?: UploadResponse | null;
@@ -13,6 +14,7 @@ interface DocumentUploadProps {
 
 export const DocumentUpload: React.FC<DocumentUploadProps> = ({
   onUploadSuccess,
+  onUploadStart,
   isUploading,
   setIsUploading,
   uploadedDocInfo,
@@ -27,6 +29,10 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
       return;
     }
     setError(null);
+    // Immediately clear previous document state in parent UI
+    if (onUploadStart) {
+      onUploadStart();
+    }
     setIsUploading(true);
 
     try {
@@ -65,13 +71,13 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
         }}
       />
 
-      {/* Upload zone or Uploaded doc card */}
-      {!uploadedDocInfo ? (
+      {/* Upload zone or Uploaded doc card: when uploading, always show ingestion state */}
+      {!uploadedDocInfo || isUploading ? (
         <div
           onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
           onDragLeave={() => setDragActive(false)}
           onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => !isUploading && fileInputRef.current?.click()}
           className={`upload-zone p-5 text-center ${dragActive ? "active" : ""}`}
         >
           {isUploading ? (
