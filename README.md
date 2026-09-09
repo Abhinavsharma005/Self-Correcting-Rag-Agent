@@ -34,7 +34,7 @@ The **Self-Correcting RAG Agent** is an autonomous, local, self-evaluating RAG s
 - **Two-Stage Retrieval Pipeline**: Combines rapid bi-encoder dense vector search ($k=8$) with full cross-attention **Cross-Encoder reranking** (`ms-marco-MiniLM-L-6-v2`) to isolate the top 4 chunks.
 - **Cyclic LangGraph State Machine**: Evaluates context relevance ($\ge 50\%$), rewrites queries dynamically when context is weak, and grades answer groundedness ($\ge 80\%$) before delivery.
 - **Anti-Hallucination Safe Refusal**: If information is genuinely absent after retries, the model safely refuses to answer rather than hallucinating facts.
-- **100% Local, Offline & Free**: Powered by local **Ollama `llama3.2`**, HuggingFace embeddings (`all-MiniLM-L6-v2`), and ChromaDB—no OpenAI API keys, zero token bills, and complete data privacy.
+- **100% Local, Offline & Free**: Powered by local **Ollama `llama3.2`**, HuggingFace embeddings (`all-MiniLM-L6-v2`), and ChromaDB.
 
 ---
 
