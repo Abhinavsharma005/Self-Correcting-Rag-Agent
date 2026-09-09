@@ -1,0 +1,40 @@
+{
+  "active_doc_id": "ad5136fe",
+  "sessions": {
+    "ad5136fe": {
+      "doc_id": "ad5136fe",
+      "filename": "Edge_AI_4_Member_Presentation_Dialogue_v5 (3).pdf",
+      "file_path": "C:\\PythonProjects\\New_Self_correcting_Rag_agent\\backend_data\\uploads\\ad5136fe_Edge_AI_4_Member_Presentation_Dialogue_v5 (3).pdf",
+      "file_size_mb": 0.05,
+      "num_pages": 10,
+      "total_chunks": 11,
+      "chunk_stats": {
+        "fixed": {
+          "num_chunks": 24,
+          "avg_chunk_len": 438.7,
+          "indexing_latency_sec": 1.377
+        },
+        "recursive": {
+          "num_chunks": 13,
+          "avg_chunk_len": 751.2,
+          "indexing_latency_sec": 1.144
+        },
+        "sentence": {
+          "num_chunks": 11,
+          "avg_chunk_len": 835.7,
+          "indexing_latency_sec": 1.198
+        },
+        "semantic": {
+          "num_chunks": 17,
+          "avg_chunk_len": 540.4,
+          "indexing_latency_sec": 1.349
+        },
+        "parent_child": {
+          "num_chunks": 50,
+          "avg_chunk_len": 191.4,
+          "indexing_latency_sec": 1.079
+        }
+      }
+    }
+  }
+}

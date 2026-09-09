@@ -1,0 +1,6 @@
+Some important techniques
+are:
+ ■ Quantization — Reduces the precision of model weights, making models smaller and faster.
+■ Pruning — Removes unnecessary neurons or connections from a neural network.
+■ Knowledge Distillation — Trains a smaller model to learn from a larger, more complex model.
+These methods allow advanced AI models to run efficiently even on smartphones and IoT devices

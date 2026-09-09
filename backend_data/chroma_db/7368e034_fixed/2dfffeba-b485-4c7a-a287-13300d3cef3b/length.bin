@@ -1,6 +1,0 @@
-the data and makes decisions
-locally. To perform these AI tasks efficiently, modern devices use specialized hardware like CPUs,
-GPUs, and NPUs, where NPUs are specifically designed for AI processing.
-And finally, there is the network and cloud layer.
-The device can communicate through Wi-Fi, 4G, or 5G, while the cloud is mainly used for training AI
-models, storing data, and delivering model update
