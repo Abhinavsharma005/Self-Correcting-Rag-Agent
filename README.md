@@ -378,5 +378,5 @@ SOFTWARE.
 ---
 
 <div align="center">
-  <sub>Distributed under the MIT License. Built with ❤️ by Abhinav Sharma (sharmaabhinav1013@gmail.com).</sub>
+  <sub>Distributed under the MIT License. Built with ❤️ by Abhinav Sharma (<a href="mailto:sharmaabhinav1013@gmail.com">sharmaabhinav1013@gmail.com</a>).</sub>
 </div>
