@@ -1,5 +1,5 @@
 {
-  "active_doc_id": "573fbbb3",
+  "active_doc_id": "c67d6894",
   "sessions": {
     "ad5136fe": {
       "doc_id": "ad5136fe",
@@ -103,6 +103,41 @@
           "num_chunks": 50,
           "avg_chunk_len": 188.9,
           "indexing_latency_sec": 3.042
+        }
+      }
+    },
+    "c67d6894": {
+      "doc_id": "c67d6894",
+      "filename": "Edge_AI_4_Member_Presentation_Dialogue_v5 (3).pdf",
+      "file_path": "C:\\PythonProjects\\New_Self_correcting_Rag_agent\\backend_data\\uploads\\c67d6894_Edge_AI_4_Member_Presentation_Dialogue_v5 (3).pdf",
+      "file_size_mb": 0.05,
+      "num_pages": 10,
+      "total_chunks": 11,
+      "chunk_stats": {
+        "fixed": {
+          "num_chunks": 24,
+          "avg_chunk_len": 438.7,
+          "indexing_latency_sec": 0.638
+        },
+        "recursive": {
+          "num_chunks": 13,
+          "avg_chunk_len": 751.2,
+          "indexing_latency_sec": 0.482
+        },
+        "sentence": {
+          "num_chunks": 11,
+          "avg_chunk_len": 835.7,
+          "indexing_latency_sec": 0.542
+        },
+        "semantic": {
+          "num_chunks": 17,
+          "avg_chunk_len": 540.4,
+          "indexing_latency_sec": 0.72
+        },
+        "parent_child": {
+          "num_chunks": 50,
+          "avg_chunk_len": 191.4,
+          "indexing_latency_sec": 3.311
         }
       }
     }
