@@ -28,13 +28,21 @@ Traditional (naive) RAG architectures execute as a brittle, one-way pipeline: `C
 4. **Static One-Shot Failure**: If initial retrieval fails, standard RAG cannot recover, resulting in wrong answers or empty responses.
 
 ### The Solution
-The **Self-Correcting RAG Agent** is an autonomous, local, self-evaluating RAG system that eliminates these failure modes:
-- **Evaluates 5 Chunking Strategies Simultaneously**: Automatically indexes every document across Fixed-Size, Recursive, Sentence-Based, Semantic, and Parent-Child chunkers.
-- **Selects the Empirical Champion**: Runs an automated 5-probe test suite on ingestion and calculates composite accuracy ($0.6 \times \text{Recall@4} + 0.4 \times \text{MRR}$) to choose the best strategy.
-- **Two-Stage Retrieval Pipeline**: Combines rapid bi-encoder dense vector search ($k=8$) with full cross-attention **Cross-Encoder reranking** (`ms-marco-MiniLM-L-6-v2`) to isolate the top 4 chunks.
-- **Cyclic LangGraph State Machine**: Evaluates context relevance ($\ge 50\%$), rewrites queries dynamically when context is weak, and grades answer groundedness ($\ge 80\%$) before delivery.
-- **Anti-Hallucination Safe Refusal**: If information is genuinely absent after retries, the model safely refuses to answer rather than hallucinating facts.
-- **100% Local, Offline & Free**: Powered by local **Ollama `llama3.2`**, HuggingFace embeddings (`all-MiniLM-L6-v2`), and ChromaDB.
+
+The **Self-Correcting RAG Agent** is a local, self-evaluating system designed to make document-based AI answers more reliable.
+
+- **🔹 Tests 5 Chunking Strategies**: Each document is processed using **Fixed, Recursive, Sentence, Semantic, and Parent-Child** chunking.
+
+- **🔹 Finds the Best Strategy**: During ingestion, all 5 strategies are tested using **Recall@4 and MRR**. The best one is selected using:
+  `0.6 × Recall@4 + 0.4 × MRR`
+
+- **🔹 Uses Two-Stage Retrieval**: First, vector search retrieves the **top 8** relevant chunks. Then a **Cross-Encoder** reranks them and selects the **top 4**.
+
+- **🔹 Self-Corrects with LangGraph**: The system checks whether the retrieved context is relevant. If it is too weak (`< 50%`), it **rewrites the query and retrieves again**. It also checks answer groundedness (`≥ 80%`).
+
+- **🔹 Prevents Hallucinations**: If the required information cannot be found even after retries, the system **refuses to answer instead of making up information**.
+
+- **🔹 Runs Locally**: Powered by **Ollama `llama3.2`**, HuggingFace embeddings (`all-MiniLM-L6-v2`), and **ChromaDB**, so the system can run locally without relying on paid LLM APIs.
 
 ---
 
@@ -369,18 +377,6 @@ SOFTWARE.
 
 ---
 
-## 🙏 Acknowledgements & Thank You
-
-A huge thank you to the open-source community and the creators of the foundational technologies that made this project possible:
-
-- **[LangChain & LangGraph Teams](https://github.com/langchain-ai)** for providing the expressive state machine primitives for cyclic agent workflows.
-- **[Ollama Team](https://ollama.com/)** for making fast, local LLM execution seamless, accessible, and completely private.
-- **[Sentence-Transformers](https://sbert.net/)** and **[HuggingFace](https://huggingface.co/)** for the open-source embeddings and Cross-Encoder reranking models.
-- **[ChromaDB Team](https://www.trychroma.com/)** for their lightweight, open-source embedded vector database.
-- **[Vercel & Next.js Team](https://nextjs.org/)** for the Next.js framework and Turbopack bundler.
-
----
-
 <div align="center">
-  <sub>Built with ❤️ for reliable, hallucination-free Document AI.</sub>
+  <sub>Distributed under the MIT License. Built with ❤️ by Abhinav Sharma (sharmaabhinav1013@gmail.com).</sub>
 </div>
