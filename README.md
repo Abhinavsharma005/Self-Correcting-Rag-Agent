@@ -227,7 +227,6 @@ New_Self_correcting_Rag_agent/
 │           └── api.ts               # Typed fetch wrappers (uploadPdf, sendQuery, fetchStats, etc.)
 │
 ├── backend_data/                    # Runtime storage (uploads, chroma_db, active_sessions.json)
-├── PROJECT_GUIDE.md                 # Complete 700+ line technical & interview reference guide
 └── README.md                        # This file
 ```
 
